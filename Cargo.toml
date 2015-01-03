@@ -1,0 +1,14 @@
+[package]
+
+name = "gps_map"
+version = "0.0.1"
+authors = ["Ben Brittain <ben@brittain.org>"]
+
+[dependencies.sdl2]
+git = "file:/home/ben/workspace/rust-sdl2"
+rev = "da6b323e654c2da62bfd77abe438cbb986827beb"
+
+[dependencies.sdl2_image]
+git = "file:/home/ben/workspace/rust-sdl2_image"
+rev = "3b7ce2379abdcd4ba69bb4acfea63422dbe9b2af"
+
