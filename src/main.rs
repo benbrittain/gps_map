@@ -1,3 +1,5 @@
+#![feature(slicing_syntax)]
+
 extern crate sdl2;
 extern crate sdl2_image;
 
@@ -11,14 +13,16 @@ use tile::{Tile};
 
 mod tile;
 mod quadtree;
+mod rendertree;
 mod map_view;
+mod utils;
 
 pub fn main() {
     sdl2::init(sdl2::INIT_VIDEO);
 
     let height = 800;
     let width = 600;
-    let zoom = 15;
+    let zoom = 2;
 
     let window = match sdl2::video::Window::new("rust-sdl2 demo: Video",
                                                  sdl2::video::WindowPos::PosCentered,
@@ -39,32 +43,52 @@ pub fn main() {
     let _ = renderer.clear();
     renderer.present();
 
-    let map_view = Mapview::new(renderer, height, width, zoom);
 
-    'main : loop {
-        'event : loop {
-            match sdl2::event::poll_event() {
-                sdl2::event::Event::Quit(_) => break 'main,
-                sdl2::event::Event::KeyDown(_, _, key, _, _, _) => {
-                    if key == sdl2::keycode::KeyCode::Escape {
-                        break 'main
-                    }
-                },
-                sdl2::event::Event::MouseWheel(_, _, _, x, y) => {
-                    map_view.zoom()
-                }
-                sdl2::event::Event::None => break 'event,
-                _ => {}
-            }
-        }
-        map_view.render();
-    }
+    //---
+//    println!("{}", utils::lat_to_y(-80.0));
+//    println!("{}", utils::ll_to_osm(42.36, -71.09, 15));
+    //---
+
+    let mut map_view = Mapview::new(renderer, height, width, zoom);
+    map_view.center_at(42.36, -71.09);
+
+
+    let mut mouse_down = false;
+//    'main : loop {
+//        'event : loop {
+//            match sdl2::event::poll_event() {
+//                sdl2::event::Event::Quit(_) => break 'main,
+//                sdl2::event::Event::KeyDown(_, _, key, _, _, _) => {
+//                    if key == sdl2::keycode::KeyCode::Escape {
+//                        break 'main
+//                    }
+//                },
+//                sdl2::event::Event::MouseWheel(_, _, _, x, y) => {
+//                    map_view.zoom()
+//                },
+//                sdl2::event::Event::MouseButtonUp(_, _, _, _, _, _) => {
+//                    mouse_down = false;
+//                },
+//                sdl2::event::Event::MouseButtonDown(_, _, _, _, _, _) => {
+//                    mouse_down = true;
+//                },
+//                sdl2::event::Event::MouseMotion(_, _, _, _, _, _, dx, dy) => {
+//                    if mouse_down {
+//                        map_view.move_by(dx, dy)
+//                    }
+//                },
+//                sdl2::event::Event::None => break 'event,
+//                _ => {}
+//            }
+//        }
+          map_view.render();
+//    }
     sdl2::quit();
 }
 
 //fn main() {
 ////    println!("initing quadtree");
-//    let mut tree = Quadtree::new_with_bb();
+//    let mut tree = Quadtree::new_with_bb(20, true);
 //
 //    let path = &Path::new("./data/gpsdata_simple.csv");
 //    let file = File::open(path);
@@ -84,6 +108,7 @@ pub fn main() {
 //            Err(_) => { break; }
 //        }
 //    }
-//    let points = tree.gather_data(Point::new(42.369705, -71.09388), 0.00003);
-//    println!("{}, {}", points, points.len());
+//    //let points = tree.gather_data(Point::new(42.369705, -71.09388), 0.00003);
+//    //println!("{}, {}", points, points.len());
+//    map_view.render();
 //}
